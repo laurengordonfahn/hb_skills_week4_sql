@@ -313,3 +313,50 @@ result set is:
 
 
 SELECT b.name, m.name, m.year, b.discontinued, (b.discontinued - m.year) FROM models AS m LEFT JOIN brands AS b ON m.brand_name=b.name WHERE b.discontinued IS NOT NULL ORDER BY b.name, m.name, m.year;
+
+
+==========
+14
+
+-----
+
+Select the name of any brand with more than 5 models in the 
+database using a HAVING clause.
+
+The correct result set is:
+
+ brand_name
+------------
+ Chevrolet
+ Pontiac
+ Ford
+(3 rows)
+
+
+-----
+
+
+SELECT brand_name FROM (SELECT brand_name, name FROM models GROUP BY brand_name, name) brand_models GROUP BY brand_name HAVING COUNT(name) > 3;
+
+
+==========
+15
+
+-----
+
+Using a subquery, select the name and year of any model whose 
+year is the same year that ANY brand was founded.
+
+The result set should be:
+
+   name    | year
+-----------+-------
+ Imperial  |  1926
+ Corvette  |  1954
+ Fleetwood |  1954
+(3 rows)
+
+-----
+
+
+SELECT models.name, models.year FROM models INNER JOIN (SELECT founded FROM brands GROUP BY founded) AS fb ON models.year = fb.founded GROUP BY models.name, models.year ORDER BY  models.year ASC, models.name;
